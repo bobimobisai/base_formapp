@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI + Vue.js Example</title>
+</head>
+<body>
+    <div id="app">
+        <form @submit.prevent="submitForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" v-model="name">
+            <label for="description">Description:</label>
+            <input type="text" id="description" v-model="description">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                name: '',
+                description: ''
+            },
+            methods: {
+                async submitForm() {
+                    try {
+                        const response = await fetch('/items/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                name: this.name,
+                                description: this.description
+                            })
+                        });
+                        const responseData = await response.json();
+                        console.log(responseData);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
