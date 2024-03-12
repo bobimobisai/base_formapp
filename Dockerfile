@@ -8,4 +8,6 @@ COPY . .
 RUN pip3 install --upgrade setuptools
 RUN pip3 install -r  requirements.txt
 
-EXPOSE 80
+CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "main:app", "-b", "0.0.0.0:8000"]
+
+EXPOSE 8000
