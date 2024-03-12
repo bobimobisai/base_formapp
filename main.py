@@ -18,6 +18,6 @@ async def create_item(item: Item):
     return {"message": "Item received"}
 
 
-@app.get("/app", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
