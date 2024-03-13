@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
+from DB.orm_crud import AsyncOrm
 
 
 app = FastAPI()
@@ -11,14 +12,23 @@ app.mount("/images", StaticFiles(directory="/"), name="images")
 
 
 class Item(BaseModel):
-    name: str
-    description: str
+    user_name: str
+    email: str
+    password: str
 
 
 @app.post("/items")
 async def create_item(item: Item):
-    print(f"Received item: {item}")
-    return {"message": "Item received"}
+    try:
+        if item:
+            user_data = {
+                "user_name": item.user_name,
+                "email": item.email,
+                "password": item.password,
+            }
+            await AsyncOrm.insert_user_auth(data=user_data)
+    except Exception as e:
+        return {"message": str(e)}
 
 
 @app.get("/", response_class=HTMLResponse)
